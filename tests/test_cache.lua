@@ -38,7 +38,7 @@ T["json backend"]["persists schema v2 entries"] = function()
 
   local decoded = vim.json.decode(table.concat(vim.fn.readfile(path), "\n"))
   eq(2, decoded.schema_version)
-  eq(6, decoded.indexer_version)
+  eq(8, decoded.indexer_version)
   eq(vault, decoded.vault)
   eq("note", decoded.entries[note_path].kind)
   eq(nil, decoded.notes)
@@ -69,9 +69,26 @@ T["json backend"]["rebuilds incompatible cache envelopes"] = function()
 
   local decoded = vim.json.decode(table.concat(vim.fn.readfile(path), "\n"))
   eq(2, decoded.schema_version)
-  eq(6, decoded.indexer_version)
+  eq(8, decoded.indexer_version)
   eq(nil, decoded.version)
   eq(nil, decoded.notes)
+end
+
+T["json backend"]["invalidates rows from before nested properties were retained"] = function()
+  local dir = Path.temp { suffix = "-obsidian-cache-json" }
+  dir:mkdir { parents = true }
+  local path = tostring(dir / "index.json")
+  local vault = tostring(dir / "vault")
+  vim.fn.writefile({
+    vim.json.encode {
+      schema_version = 2,
+      indexer_version = 6,
+      vault = vault,
+      entries = { [vault .. "/Old.md"] = { kind = "note", properties = {} } },
+    },
+  }, path)
+  local backend = require("obsidian.cache.json_backend").open { path = path, vault = vault }
+  eq({}, backend:all())
 end
 
 T["cache backends"]["uses a registered backend by name"] = function()
@@ -173,7 +190,7 @@ T["cache backends"]["stores typed compact note rows"] = function()
   eq(nil, row.tasks)
 end
 
-T["cache backends"]["omits nested frontmatter properties but keeps scalar lists"] = function()
+T["cache backends"]["retains nested frontmatter properties and scalar lists"] = function()
   local dir = Path.temp { suffix = "-obsidian-cache" }
   dir:mkdir { parents = true }
   Obsidian = { dir = dir }
@@ -184,7 +201,13 @@ T["cache backends"]["omits nested frontmatter properties but keeps scalar lists"
   )
 
   local row = require("obsidian.cache.note").build(note_path, tostring(dir))
-  eq({ custom = "value", labels = { "one", "two" } }, row.properties)
+  eq({
+    custom = "value",
+    labels = { "one", "two" },
+    nested = { child = "hidden" },
+    empty = {},
+    items = { { name = "hidden" } },
+  }, row.properties)
 end
 
 T["cache backends"]["computes backlink counts from cached links"] = function()

@@ -389,3 +389,12 @@ Please read the [CONTRIBUTING](https://github.com/obsidian-nvim/obsidian.nvim/bl
 ## ❤️ Acknowledgement
 
 We would like to thank [epwalsh](https://github.com/epwalsh) for creating this beautiful plugin. If you're feeling especially generous, [he still appreciates some coffee funds!](https://www.buymeacoffee.com/epwalsh).
+
+### Optional Bases plugin
+
+Bases queries and table presentation are provided by the separate
+[obsidian-bases.nvim](https://github.com/frisitano/obsidian-bases.nvim) plugin.
+With that plugin configured, `:Obsidian render` delegates to its viewer. This
+plugin supplies the note cache and YAML parser; it does not require Penlight,
+Markview, Documd or an image renderer. The standalone plugin documents its own
+prerequisites and practical Bases compatibility limits.

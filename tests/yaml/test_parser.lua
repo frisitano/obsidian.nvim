@@ -280,4 +280,13 @@ T["should parse array item strings that look like markdown links"] = function()
   eq({ links = { "[Foo](bar)" } }, result)
 end
 
+T["preserves dotted property and path-shaped mapping keys"] = function()
+  local actual =
+    yaml.loads "properties:\n  file.name:\n    displayName: Title\nfiles:\n  .atlas/one/.zshenv: first\n  .atlas/two/.zshenv: second"
+  eq({
+    properties = { ["file.name"] = { displayName = "Title" } },
+    files = { [".atlas/one/.zshenv"] = "first", [".atlas/two/.zshenv"] = "second" },
+  }, actual)
+end
+
 return T

@@ -25,6 +25,7 @@ M.find_files = require("obsidian.cache.api").find_files
 
 ---@class obsidian.cache.FileStat
 ---@field size integer
+---@field ctime_sec? integer
 ---@field mtime_sec integer
 ---@field mtime_nsec integer
 
@@ -464,6 +465,8 @@ function M.shutdown()
     end)
   end
   state = nil
+  -- A replacement cache is a new version even when its initial scan is empty.
+  generation = generation + 1
 end
 
 -- ──────────────────────────────────────────────────────────────────────────────
