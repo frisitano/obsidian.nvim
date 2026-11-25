@@ -406,3 +406,11 @@ Integrations that display a generated buffer can set
 authored note context. Note and link commands use that source, including unsaved
 links; computed table links do not become authored backlinks. Invalid or cyclic
 source mappings are ignored.
+
+Reading integrations may also provide `document_source.links`, a list of
+`{ link = "[[Target]]", source_path = "/absolute/entry.md", display = "Label" }`
+records. `:Obsidian links` adds these as labelled table entries, deduplicated by
+source path and link syntax. Selection uses the supplied entry context through
+native navigation. The list belongs to the current projection and is never added
+to the authored note's links or cache/backlinks. Integrations must replace it
+when their visible page/view changes and clear it for empty results.

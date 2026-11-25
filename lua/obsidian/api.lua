@@ -207,6 +207,11 @@ M.resolve_workspace_dir = function(path)
   end
 end
 
+---@class obsidian.api.ProjectedLink
+---@field link string Native wiki/Markdown link syntax.
+---@field source_path string Absolute authored entry path for relative resolution.
+---@field display string|? Full untruncated label for the picker.
+
 ---Resolve a reading projection to its loaded authored source buffer.
 ---@param bufnr integer|?
 ---@return integer|?
