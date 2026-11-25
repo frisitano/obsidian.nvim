@@ -278,9 +278,9 @@ Parser._error_msg = function(_, msg, line_num, line_text)
   return full_msg
 end
 
-local YAML_KEY_REGEX = "([a-zA-Z0-9_-()/]+[a-zA-Z0-9_()/ -]*)"
-local YAML_MAPPING_START_REGEX = string.format("%s:$", YAML_KEY_REGEX)
-local YAML_MAPPING_INLINE_REGEX = string.format("%s: (.*)", YAML_KEY_REGEX)
+local YAML_KEY_REGEX = "([a-zA-Z0-9_.%-()/]+[a-zA-Z0-9_.()/ %-]*)"
+local YAML_MAPPING_START_REGEX = string.format("^%s:$", YAML_KEY_REGEX)
+local YAML_MAPPING_INLINE_REGEX = string.format("^%s: (.*)", YAML_KEY_REGEX)
 
 ---@param self obsidian.yaml.Parser
 ---@param i integer

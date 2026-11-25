@@ -8,16 +8,20 @@ local tags = require "obsidian.tag"
 local M = {}
 
 ---@param value any
+---@param depth? integer
 ---@return boolean
-local function is_cacheable_property(value)
+local function is_cacheable_property(value, depth)
   if type(value) ~= "table" then
     return true
   end
-  if not vim.islist(value) or next(value) == nil then
+  depth = depth or 0
+  if depth >= 32 then
     return false
   end
-  for _, item in ipairs(value) do
-    if type(item) == "table" then
+  -- Retain nested YAML properties for dotted queries. Bound recursion and reject
+  -- non-property keys rather than retaining runtime objects in persisted rows.
+  for key, item in pairs(value) do
+    if (type(key) ~= "string" and type(key) ~= "number") or not is_cacheable_property(item, depth + 1) then
       return false
     end
   end
@@ -156,6 +160,7 @@ function M.build(abs_path, _vault_root)
     kind = "note",
     stat = {
       mtime_sec = stat.mtime.sec,
+      ctime_sec = stat.birthtime and stat.birthtime.sec or nil,
       mtime_nsec = stat.mtime.nsec,
       size = stat.size,
     },
