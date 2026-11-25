@@ -283,7 +283,11 @@ return {
     opts.label = label
     opts.anchor = ref.anchor ~= nil and (vim.uri_decode(ref.anchor) or ref.anchor) or decoded_anchor
     opts.block = ref.block ~= nil and (vim.uri_decode(ref.block) or ref.block) or decoded_block
-    opts.bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
+    opts.bufnr = require("obsidian.api").source_bufnr(opts.bufnr)
+    if not opts.bufnr then
+      callback(nil, {})
+      return
+    end
     opts.cursor_row = opts.cursor_row or vim.api.nvim_win_get_cursor(0)[1]
     if opts.block ~= nil and location == "" then
       open_block_link(opts.block, wrapped_callback, opts)
