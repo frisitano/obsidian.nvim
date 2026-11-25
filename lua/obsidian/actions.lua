@@ -48,7 +48,7 @@ end
 --- Follow a link. If the link argument is `nil` we attempt to follow a link under the cursor.
 ---
 ---@param link string?
----@param opts { open_strategy: obsidian.config.OpenStrategy |? } |?
+---@param opts { open_strategy: obsidian.config.OpenStrategy |?, bufnr: integer|? } |?
 M.follow_link = function(link, opts)
   opts = opts and opts or {}
   local range
@@ -77,7 +77,7 @@ M.follow_link = function(link, opts)
         end
       end)
     end
-  end, { range = range })
+  end, { range = range, bufnr = opts.bufnr })
 end
 
 ---Replace the wiki or Markdown link under the cursor with its display text.

@@ -398,3 +398,11 @@ With that plugin configured, `:Obsidian render` delegates to its viewer. This
 plugin supplies the note cache and YAML parser; it does not require Penlight,
 Markview, Documd or an image renderer. The standalone plugin documents its own
 prerequisites and practical Bases compatibility limits.
+
+### Reading projections
+
+Integrations that display a generated buffer can set
+`vim.b[viewer].document_source = { buffer = source_bufnr }` to retain the loaded
+authored note context. Note and link commands use that source, including unsaved
+links; computed table links do not become authored backlinks. Invalid or cyclic
+source mappings are ignored.

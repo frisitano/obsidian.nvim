@@ -602,8 +602,18 @@ M.find_links = function(note)
   ---@type table<string, boolean>
   local found = {}
   local lines = {}
-  for line in io.lines(tostring(note.path)) do
-    lines[#lines + 1] = line:gsub("\r$", "")
+  local bufnr = note.bufnr
+  if bufnr and vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_name(bufnr) == tostring(note.path) then
+    lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  else
+    local file = io.open(tostring(note.path), "r")
+    if not file then
+      return matches
+    end
+    for line in file:lines() do
+      lines[#lines + 1] = string.gsub(line, "\r$", "")
+    end
+    file:close()
   end
   local document = Document.parse(lines)
 

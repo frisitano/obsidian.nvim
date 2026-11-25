@@ -207,6 +207,26 @@ M.resolve_workspace_dir = function(path)
   end
 end
 
+---Resolve a reading projection to its loaded authored source buffer.
+---@param bufnr integer|?
+---@return integer|?
+M.source_bufnr = function(bufnr)
+  bufnr = bufnr and bufnr ~= 0 and bufnr or vim.api.nvim_get_current_buf()
+  local seen = {}
+  while vim.api.nvim_buf_is_loaded(bufnr) and not seen[bufnr] do
+    seen[bufnr] = true
+    local source = vim.b[bufnr].document_source
+    if source == nil then
+      return bufnr
+    end
+    if type(source) ~= "table" or type(source.buffer) ~= "number" or source.buffer < 1 or source.buffer % 1 ~= 0 then
+      return nil
+    end
+    bufnr = math.floor(source.buffer)
+  end
+  return nil
+end
+
 --- Get the current note from a buffer.
 ---
 ---@param bufnr integer|?
@@ -214,9 +234,15 @@ end
 ---
 ---@return obsidian.Note|?
 M.current_note = function(bufnr, opts)
-  bufnr = bufnr or 0
+  bufnr = M.source_bufnr(bufnr)
+  if not bufnr then
+    return nil
+  end
   local Note = require "obsidian.note"
   local path = vim.api.nvim_buf_get_name(bufnr)
+  if require("obsidian.uri").is_uri(path) then
+    return nil
+  end
   local workspace = M.find_workspace(path)
   if not workspace or not M.path_is_note(path, workspace) then
     return nil
