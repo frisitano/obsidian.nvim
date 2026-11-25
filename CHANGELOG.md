@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+
+- Remove the optional `Obsidian render` bridge; use automatic Bases presentation or `:ObsidianBases render` from the standalone plugin.
+
 ### Added
 
-- Optional `Obsidian render` command delegates Bases presentation to the standalone obsidian-bases.nvim plugin.
 - Preserve nested cached YAML metadata and dotted/path-shaped keys, expose filesystem creation timestamps, and invalidate older cache indexes and replaced cache generations.
 
 - Follow `obsidian://` Markdown links and autolinks inside Neovim through link navigation. Supports `open`, `new`, `daily`, `unique`, `search`, and `choose-vault`, including heading/block targets, section content insertion, and tab/split opening. File-modifying links require confirmation by default; URI targets stay inside configured workspaces. See [Navigation](docs/Navigation.md#obsidian-uri-links).

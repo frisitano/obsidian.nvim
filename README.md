@@ -394,7 +394,7 @@ We would like to thank [epwalsh](https://github.com/epwalsh) for creating this b
 
 Bases queries and table presentation are provided by the separate
 [obsidian-bases.nvim](https://github.com/frisitano/obsidian-bases.nvim) plugin.
-With that plugin configured, `:Obsidian render` delegates to its viewer. This
+Use its automatic reading view or `:ObsidianBases render` command. This
 plugin supplies the note cache and YAML parser; it does not require Penlight,
 Markview, Documd or an image renderer. The standalone plugin documents its own
 prerequisites and practical Bases compatibility limits.

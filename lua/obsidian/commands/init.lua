@@ -290,8 +290,6 @@ M.register("quick_switch", { nargs = "?" })
 
 M.register("rebuild_cache", { nargs = 0 })
 
-M.register("render", { nargs = 0 })
-
 M.register("workspace", { nargs = "?" })
 
 M.register("help", { nargs = "?", complete = M.help_complete })
